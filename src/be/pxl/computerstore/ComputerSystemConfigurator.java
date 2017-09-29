@@ -8,7 +8,6 @@ import be.pxl.computerstore.hardware.ComputerComponent;
 import be.pxl.computerstore.hardware.ComputerSystem;
 import be.pxl.computerstore.hardware.Peripheral;
 import be.pxl.computerstore.hardware.Processor;
-import be.pxl.computerstore.util.TooManyPeripheralsException;
 
 public class ComputerSystemConfigurator {
 
@@ -36,18 +35,22 @@ public class ComputerSystemConfigurator {
 		}
 		boolean choosePeripheral = true;
 
-		do {
-			System.out.println("Kies een randapparaat (geef artikelnummer): ");
-			displayPeripherals();
-			String artikelnummer = keyboard.nextLine();
-			ComputerComponent chosen = getComputerComponent(artikelnummer);
-			if (chosen instanceof Peripheral) {
-				computerSystem.addPeripheral((Peripheral) chosen);
-			}
-			System.out.println("Wil u nog een randaparaat toevoegen (j/n)?");
-			choosePeripheral = keyboard.nextLine().equals("j");
-		} while(choosePeripheral);
-		// TODO catch TooManyPeripheralsException
+		try {
+			do {
+
+				System.out.println("Kies een randapparaat (geef artikelnummer): ");
+				displayPeripherals();
+				String artikelnummer = keyboard.nextLine();
+				ComputerComponent chosen = getComputerComponent(artikelnummer);
+				if (chosen instanceof Peripheral) {
+					computerSystem.addPeripheral((Peripheral) chosen);
+				}
+				System.out.println("Wil u nog een randaparaat toevoegen (j/n)?");
+				choosePeripheral = keyboard.nextLine().equals("j");
+			} while (choosePeripheral);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 		System.out.println("De door u gekozen computer:");
 		System.out.println(computerSystem);
 		keyboard.close();
@@ -60,7 +63,7 @@ public class ComputerSystemConfigurator {
 			}
 		}
 	}
-	
+
 	public static void displayProcessors() {
 		for (ComputerComponent component : Warehouse.computerComponents) {
 			if (component instanceof Processor) {
@@ -68,7 +71,7 @@ public class ComputerSystemConfigurator {
 			}
 		}
 	}
-	
+
 	public static void displayPeripherals() {
 		for (ComputerComponent component : Warehouse.computerComponents) {
 			if (component instanceof Peripheral) {
@@ -86,5 +89,4 @@ public class ComputerSystemConfigurator {
 		return null;
 	}
 
-	
 }
